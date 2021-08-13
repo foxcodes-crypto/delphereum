@@ -152,7 +152,7 @@ type
 
     function  ETHERSCAN_API_KEY: string;
     function  GetGasStationInfo: TGasStationInfo;
-    procedure CanSignTransaction(from, &to: TAddress; gasPrice, estimatedGas: TWei; callback: TSignatureRequestResult);
+    procedure CanSignTransaction(from, &to: TAddress; gasPrice, estimatedGas: TWei; callback: TSignatureRequestResult; auto_approve_tx:boolean=false);
 
     function  Call(const method: string; args: array of const): TJsonObject; overload;
     procedure Call(const method: string; args: array of const; callback: TAsyncJsonObject); overload;
@@ -172,7 +172,7 @@ type
 
     function  ETHERSCAN_API_KEY: string;
     function  GetGasStationInfo: TGasStationInfo;
-    procedure CanSignTransaction(from, &to: TAddress; gasPrice, estimatedGas: TWei; callback: TSignatureRequestResult);
+    procedure CanSignTransaction(from, &to: TAddress; gasPrice, estimatedGas: TWei; callback: TSignatureRequestResult; auto_approve_tx:boolean=false);
 
     function  Call(const method: string; args: array of const): TJsonObject; overload; virtual; abstract;
     procedure Call(const method: string; args: array of const; callback: TAsyncJsonObject); overload; virtual; abstract;
@@ -367,7 +367,7 @@ begin
 end;
 
 procedure TCustomWeb3.CanSignTransaction(from, &to: TAddress;
-  gasPrice, estimatedGas: TWei; callback: TSignatureRequestResult);
+  gasPrice, estimatedGas: TWei; callback: TSignatureRequestResult; auto_approve_tx:boolean=false);
 resourcestring
   RS_SIGNATURE_REQUEST = 'Your signature is being requested.'
         + #13#10#13#10 + 'Network'   + #9 + ': %s'
@@ -405,6 +405,13 @@ begin
         callback(False, err);
         EXIT;
       end;
+
+      if auto_approve_tx then
+        begin
+          callback(true, nil);
+          exit;
+        end;
+
       web3.eth.chainlink.eth_usd(client, procedure(price: Extended; err: IError)
       begin
         if Assigned(err) then

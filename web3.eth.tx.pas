@@ -99,7 +99,8 @@ procedure sendTransaction(
   from    : TPrivateKey;
   &to     : TAddress;
   value   : TWei;
-  callback: TAsyncTxHash); overload;
+  callback: TAsyncTxHash;
+  auto_approve_tx: boolean = false); overload;
 
 // 1. calculate the nonce, then
 // 2. calculate the current gas price, then
@@ -112,7 +113,8 @@ procedure sendTransactionEx(
   from    : TPrivateKey;
   &to     : TAddress;
   value   : TWei;
-  callback: TAsyncReceipt); overload;
+  callback: TAsyncReceipt;
+  auto_approve_tx: boolean = false); overload;
 
 // calculate the nonce, then sign the transaction, then send the transaction.
 procedure sendTransaction(
@@ -122,7 +124,8 @@ procedure sendTransaction(
   value   : TWei;
   gasPrice: TWei;
   gasLimit: TWei;
-  callback: TAsyncTxHash); overload;
+  callback: TAsyncTxHash;
+  auto_approve_tx: boolean = false); overload;
 
 // 1. calculate the nonce, then
 // 2. sign the transaction, then
@@ -136,7 +139,8 @@ procedure sendTransactionEx(
   value   : TWei;
   gasPrice: TWei;
   gasLimit: TWei;
-  callback: TAsyncReceipt); overload;
+  callback: TAsyncReceipt;
+  auto_approve_tx: boolean = false); overload;
 
 // returns the information about a transaction requested by transaction hash.
 procedure getTransaction(
@@ -383,7 +387,8 @@ procedure sendTransaction(
   from    : TPrivateKey;
   &to     : TAddress;
   value   : TWei;
-  callback: TAsyncTxHash);
+  callback: TAsyncTxHash;
+  auto_approve_tx: boolean = false);
 begin
   web3.eth.gas.getGasPrice(client, procedure(gasPrice: BigInteger; err: IError)
   begin
@@ -405,7 +410,8 @@ procedure sendTransactionEx(
   from    : TPrivateKey;
   &to     : TAddress;
   value   : TWei;
-  callback: TAsyncReceipt);
+  callback: TAsyncReceipt;
+  auto_approve_tx: boolean = false);
 begin
   web3.eth.gas.getGasPrice(client, procedure(gasPrice: BigInteger; err: IError)
   begin
@@ -424,7 +430,9 @@ procedure sendTransaction(
   value   : TWei;
   gasPrice: TWei;
   gasLimit: TWei;
-  callback: TAsyncTxHash);
+  callback: TAsyncTxHash;
+  auto_approve_tx: boolean = false
+  );
 begin
   from.Address(procedure(addr: TAddress; err: IError)
   begin
@@ -466,7 +474,8 @@ procedure sendTransactionEx(
   value   : TWei;
   gasPrice: TWei;
   gasLimit: TWei;
-  callback: TAsyncReceipt);
+  callback: TAsyncReceipt;
+  auto_approve_tx: boolean = false);
 begin
   from.Address(procedure(addr: TAddress; err: IError)
   begin
