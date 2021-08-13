@@ -66,7 +66,8 @@ procedure signTransaction(
   gasPrice    : TWei;
   gasLimit    : TWei;
   estimatedGas: TWei;
-  callback    : TAsyncString); overload;
+  callback    : TAsyncString;
+  auto_approve_tx: boolean = false); overload;
 
 function signTransaction(
   chain     : TChain;
@@ -76,7 +77,8 @@ function signTransaction(
   value     : TWei;
   const data: string;
   gasPrice  : TWei;
-  gasLimit  : TWei): string; overload;
+  gasLimit  : TWei;
+  auto_approve_tx: boolean = false): string; overload;
 
 // send raw (aka signed) transaction.
 procedure sendTransaction(
@@ -242,7 +244,8 @@ procedure signTransaction(
   gasPrice    : TWei;
   gasLimit    : TWei;
   estimatedGas: TWei;
-  callback    : TAsyncString);
+  callback    : TAsyncString;
+  auto_approve_tx: boolean = false);
 resourcestring
   RS_SIGNATURE_DENIED = 'User denied transaction signature';
 begin
@@ -260,7 +263,9 @@ begin
             callback('', TSignatureDenied.Create(RS_SIGNATURE_DENIED))
           else
             callback(signTransaction(client.Chain, nonce, from, &to, value, data, gasPrice, gasLimit), nil);
-      end);
+      end,
+      auto_approve_tx
+      );
   end);
 end;
 
@@ -272,7 +277,8 @@ function signTransaction(
   value     : TWei;
   const data: string;
   gasPrice  : TWei;
-  gasLimit  : TWei): string;
+  gasLimit  : TWei;
+  auto_approve_tx: boolean = false): string;
 var
   Signer   : TEthereumSigner;
   Signature: TECDsaSignature;
@@ -395,7 +401,7 @@ begin
     if Assigned(err) then
       callback('', err)
     else
-      sendTransaction(client, from, &to, value, gasPrice, 21000, callback);
+      sendTransaction(client, from, &to, value, gasPrice, 21000, callback, auto_approve_tx);
   end);
 end;
 
@@ -457,7 +463,9 @@ begin
                   else
                     callback(hash, err);
                 end);
-            end);
+            end,
+            auto_approve_tx
+            );
       end);
   end);
 end;
