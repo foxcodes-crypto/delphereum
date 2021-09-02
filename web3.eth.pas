@@ -477,6 +477,9 @@ begin
         if Assigned(err) then
           callback(nil, err)
         else
+          (*
+          disabled 3/9/2021 due to issues with estimate retrieval failing JSON obj
+
           web3.eth.gas.estimateGas(
             client, addr, &to, data, gasLimit,
           procedure(estimatedGas: BigInteger; err: IError)
@@ -486,6 +489,8 @@ begin
             else
               write(client, from, &to, value, data, gasPrice, gasLimit, estimatedGas, callback);
           end);
+          *)
+            write(client, from, &to, value, data, gasPrice, gasLimit, BigInteger.Create(100000), callback);
       end);
   end);
 end;

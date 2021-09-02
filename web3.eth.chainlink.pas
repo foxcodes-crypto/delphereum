@@ -18,7 +18,9 @@ uses
   web3,
   web3.eth,
   web3.eth.contract,
-  web3.eth.types;
+  web3.eth.types,
+
+  ETHUSD;
 
 type
   TAggregatorV3 = class(TCustomContract)
@@ -48,6 +50,7 @@ uses
 procedure eth_usd(client: IWeb3; callback: TAsyncFloat);
 var
   EthUsd: TEthUsd;
+  err: IError;
 begin
   // Ethereum price feed is available on Mainnet and Rinkeby and Kovan only.
   if client.Chain in [Mainnet, Rinkeby, Kovan] then
@@ -66,11 +69,8 @@ begin
       EXIT;
     end;
   end;
-  // Not on Mainnet or Rinkeby or Kovan? Fall back on api.coincap.io
-  web3.coincap.ticker('ethereum', procedure(ticker: ITicker; err: IError)
-  begin
-    callback(ticker.Price, err);
-  end);
+
+  callback(ETHUSD_price, err);
 end;
 
 { TAggregatorV3 }
