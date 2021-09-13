@@ -20,7 +20,7 @@ uses
   web3.eth.contract,
   web3.eth.types,
 
-  ETHUSD;
+  Blockchain_base_prices;
 
 type
   TAggregatorV3 = class(TCustomContract)
